@@ -32,12 +32,17 @@ def ai_chat():
     email = data.get('email', 'anonimo@survstake.com')
     
     intent = analyze_intent(message)
-    response = KNOWLEDGE_BASE.get(intent, "Soy el asistente IA de SURVSTAKE. ¿En qué puedo ayudarle con su estación CORS?")
+    response = KNOWLEDGE_BASE.get(intent, "Soy el asistente IA de SURVSTAKE. ¿En qué puedo ayudarle?")
     
-    # Si el mensaje suena a queja, lo registramos como PQR automáticamente
-    if any(word in message.lower() for word in ["falla", "error", "no sirve", "queja", "reclamo", "malo"]):
+    # Lógica de WhatsApp Business para PQRs
+    if any(word in message.lower() for word in ["falla", "error", "no sirve", "queja", "reclamo"]):
         save_pqr(email, "Queja/Falla", message, response)
-        response = "He detectado una inconformidad. He registrado esto como un PQR oficial en nuestro sistema y un técnico revisará su caso. " + response
+        
+        # Generar link de WhatsApp Business con el contexto del error
+        wa_text = f"Hola SurvStake, mi nombre es {email}. La IA ha radicado mi PQR por: {message}. Solicito soporte humano."
+        wa_link = f"https://wa.me/573178623774?text={wa_text.replace(' ', '%20')}"
+        
+        response = f"⚠️ He detectado una falla técnica. He radicado tu PQR en el sistema interno y he preparado un enlace prioritario para hablar con un ingeniero en WhatsApp Business: {wa_link}"
 
     return jsonify({"reply": response, "intent": intent})
 
