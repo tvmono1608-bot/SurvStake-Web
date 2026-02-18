@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURVSTAKE CORS | Suscripciones RTK</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="landing">
+    <div class="glass-bg"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>SURVSTAKE<span>CORS</span></h1>
+            </div>
+            <nav>
+                <a href="index.html" class="btn-secondary">Portal Clientes</a>
+            </nav>
+        </header>
+
+        <section class="pricing">
+            <h2>Acceso a Correcciones Centimétricas</h2>
+            <p>Conéctate a nuestra red líder en Colombia con precisión centimétrica garantizada.</p>
+
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Plan Diario</h3>
+                    <div class="cost">$25.000 <span>/día</span></div>
+                    <ul>
+                        <li>Multiconstelación (GPS+GLO+GAL+BDS)</li>
+                        <li>Precisión < 2cm</li>
+                        <li>Soporte Técnico 24/7</li>
+                    </ul>
+                    <button class="btn-action" onclick="payWithWompi('plan_dia')">Comprar Ahora</button>
+                </div>
+
+                <div class="price-card popular">
+                    <h3>Plan Mensual</h3>
+                    <div class="cost">$350.000 <span>/mes</span></div>
+                    <ul>
+                        <li>Acceso Ilimitado</li>
+                        <li>Conexión de Baja Latencia</li>
+                        <li>Reportes de Productividad</li>
+                    </ul>
+                    <button class="btn-action" onclick="payWithWompi('plan_mes')">Comprar Ahora</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h3>¿Cómo funciona?</h3>
+            <div class="steps-horizontal">
+                <div class="h-step">1. Realiza el pago seguro</div>
+                <div class="h-step">2. Recibe tus credenciales al correo</div>
+                <div class="h-step">3. Conecta tu Rover y ¡listo!</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function payWithWompi(plan) {
+            alert('Redirigiendo a pasarela de pagos Wompi/ePayco...');
+            // Aquí iría el widget de Wompi
+        }
+    </script>
+</body>
+
+</html>

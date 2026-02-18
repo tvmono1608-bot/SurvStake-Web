@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURVSTAKE CORS | Gestión GNSS Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="glass-bg"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="icon">🛰️</span>
+                <h1>SURVSTAKE<span>CORS</span></h1>
+            </div>
+            <nav>
+                <div class="status-badge">
+                    <span class="dot pulse"></span> Módulo de Ciberseguridad Activo
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h2>Asistente de Despliegue Permanente <mark>Alpha 5i</mark></h2>
+                <p>Configuración profesional bajo Resoluciones IGAC 1468/2021 y 1562/2018.</p>
+            </section>
+
+            <div class="grid-manager">
+                <!-- Pasos del Asistente -->
+                <div class="stepper-card">
+                    <h3>Configuración de Hardware y Flujo</h3>
+                    <div class="step-list">
+                        <div class="step active" onclick="showStep(1)">
+                            <div class="step-num">1</div>
+                            <div class="step-text">Receptor Alpha 5i</div>
+                        </div>
+                        <div class="step" onclick="showStep(2)">
+                            <div class="step-num">2</div>
+                            <div class="step-text">Túnel Seguro Cloudflare</div>
+                        </div>
+                        <div class="step" onclick="showStep(3)">
+                            <div class="step-num">3</div>
+                            <div class="step-text">Caster SNIP (Privado)</div>
+                        </div>
+                        <div class="step" onclick="showStep(4)">
+                            <div class="step-num">4</div>
+                            <div class="step-text">Validación MAGNA</div>
+                        </div>
+                        <div class="step" onclick="showStep(5)">
+                            <div class="step-num">5</div>
+                            <div class="step-text">Gestión Comercial</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalle de Configuración -->
+                <div class="detail-card" id="step-content">
+                    <div class="loader">Seleccione un paso para comenzar...</div>
+                </div>
+            </div>
+
+            <!-- Panel de Mensajes RTCM Recomendados -->
+            <section class="rtcm-panel">
+                <h3>Mensajes RTCM 3.3 Multiconstelación</h3>
+                <div class="rtcm-grid">
+                    <div class="rtcm-item"><strong>1005</strong><span>Coord. Estación</span></div>
+                    <div class="rtcm-item"><strong>1033</strong><span>Descr. Receptor</span></div>
+                    <div class="rtcm-item"><strong>1074-77</strong><span>GPS MSM</span></div>
+                    <div class="rtcm-item"><strong>1084-87</strong><span>GLO MSM</span></div>
+                    <div class="rtcm-item"><strong>1094-97</strong><span>GAL MSM</span></div>
+                    <div class="rtcm-item"><strong>1124-27</strong><span>BDS MSM</span></div>
+                    <div class="rtcm-item" style="border-color: var(--accent);"><strong>ACTIVOS</strong><span
+                            id="rover-count">0 Rovers</span></div>
+                    <div class="rtcm-item" style="border-color: var(--accent);"><strong>INGRESOS</strong><span>$0.00
+                            COP</span></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Infraestructura Geodésica Segura - Colombia | Desplegado por Antigravity</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
