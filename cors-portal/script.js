@@ -217,15 +217,30 @@ function initializeSystem() {
 
 // Inicializar primer paso solo si el wizard ya no está
 window.onload = () => {
-    // Verificar si el sistema ya está instalado
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+    if (!isLocal) {
+        // MODO CLIENTE: Ocultar pestañas administrativas en la Web Pública
+        const adminSteps = [5, 6, 7]; // Índices de Finanzas, Mantenimiento e IA
+        adminSteps.forEach(idx => {
+            const stepEl = document.querySelector(`.step[onclick="showStep(${idx})"]`);
+            if (stepEl) stepEl.style.display = 'none';
+        });
+        console.log("[SURVSTAKE-SECURITY] Modo Cliente Publicado: Funciones administrativas ocultas.");
+    } else {
+        console.log("[SURVSTAKE-SECURITY] Modo Administrador Local: Acceso total concedido.");
+    }
+
+    // Verificar si el sistema ya está instalado (Solo local)
     fetch('/api/status')
         .then(res => res.json())
         .then(data => {
-            if (data.is_installed) {
+            if (data.is_installed && isLocal) {
                 document.getElementById('maintenance-options').style.display = 'block';
                 document.getElementById('start-btn').innerText = "VINCULAR Y LANZAR SURVSTAKE";
             }
-        });
+        })
+        .catch(e => console.log("Servidor local no detectado (Modo Offline Web)"));
 };
 
 function uninstallSystem() {
