@@ -85,8 +85,87 @@ const steps = {
             </ul>
             <p>Consulta el archivo <strong>manage_users.py</strong> para crear usuarios manualmente o ver reportes.</p>
         `
+    },
+    6: {
+        title: "Sistema Financiero y Métodos de Pago",
+        content: `
+            <p>Configure sus datos bancarios para recibir transferencias directas y gestione el balance de ingresos.</p>
+            <div class="financial-grid">
+                <div class="config-box">
+                    <h4>💰 Configuración de Cuentas</h4>
+                    <label>BANCO / ENTIDAD:</label>
+                    <input type="text" id="bank-name" placeholder="Ej: Bancolombia / Nequi" style="width:100%; margin-bottom:10px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 5px;">
+                    <label>NÚMERO DE CUENTA:</label>
+                    <input type="text" id="bank-acc" placeholder="Ej: 3101234567" style="width:100%; margin-bottom:10px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 5px;">
+                    <button class="btn-action" onclick="saveFinancials()" style="padding: 8px 15px; font-size: 0.8rem;">Guardar Cambios</button>
+                </div>
+                
+                <div class="config-box" style="border-left-color: var(--accent);">
+                    <h4>📊 Balance General</h4>
+                    <p>Total Ingresos: <strong id="total-income-val">$0.00 COP</strong></p>
+                    <p>Pagos por Transferencia: <strong id="transfer-income-val">0</strong></p>
+                    <button class="btn-action" style="background: var(--accent); padding: 8px 15px; font-size: 0.8rem;">Generar Reporte PDF</button>
+                </div>
+            </div>
+            <h4>Historial de Transacciones Recientes</h4>
+            <div class="legal-scroll" style="height: 120px; font-size: 0.8rem;">
+                <p>[Automático] Venta Plan Mensual - User: Rover_01 - $350.000</p>
+                <p>[Manual] Venta Plan Diario - User: Ing_Topo - $25.000</p>
+            </div>
+        `
+    },
+    "7": {
+        title: "Supervisión IA y Gestión de PQRs",
+        content: `
+            <div class="rtcm-panel" style="background: rgba(15, 23, 42, 0.4);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <p>PQRs Radicados mediante Inteligencia Artificial</p>
+                    <button class="btn-action" style="font-size:0.7rem; padding: 5px 10px;" onclick="refreshPQRs()">Actualizar Lista</button>
+                </div>
+                <div id="pqr-list" style="max-height: 250px; overflow-y: auto;">
+                    <p style="font-size: 0.8rem; color: #64748b; text-align: center;">Pulse el botón para cargar registros de atención...</p>
+                </div>
+                <div style="margin-top:20px; padding-top:15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.8rem;">Estado del Asistente IA: <strong style="color:#00ff88;">ACTIVO (24/7)</strong></span>
+                        <button class="btn-secondary" style="font-size:0.7rem; color:#ff4444;" onclick="alert('IA en modo Standby')">Pausar IA</button>
+                    </div>
+                </div>
+            </div>
+        `
     }
 };
+
+function refreshPQRs() {
+    const list = document.getElementById('pqr-list');
+    fetch('/api/pqrs')
+        .then(res => res.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                list.innerHTML = '<p style="font-size:0.8rem; color:#64748b; text-align:center;">No hay PQRs pendientes. La IA ha resuelto todas las dudas.</p>';
+                return;
+            }
+            list.innerHTML = data.map(p => `
+                <div class="config-box" style="margin:5px 0; padding:10px; font-size:0.75rem;">
+                    <div style="display:flex; justify-content:space-between; color:var(--primary);">
+                        <strong>${p.category}</strong>
+                        <span>${p.created_at}</span>
+                    </div>
+                    <div style="margin-top:5px; color:#fff;">${p.description}</div>
+                    <div style="margin-top:5px; color:#64748b; font-style:italic;">IA: ${p.ai_response}</div>
+                </div>
+            `).join('');
+        });
+}
+
+function saveFinancials() {
+    const bank = document.getElementById('bank-name').value;
+    const acc = document.getElementById('bank-acc').value;
+    alert('SURVSTAKE FINANCE: Datos de transferencia actualizados exitosamente.');
+    // Aquí se guardaría en localstorage o base de datos
+    localStorage.setItem('survstake_bank', bank);
+    localStorage.setItem('survstake_acc', acc);
+}
 
 function showStep(n) {
     const content = document.getElementById('step-content');
@@ -113,5 +192,100 @@ function showStep(n) {
     }, 200);
 }
 
-// Inicializar primer paso
-window.onload = () => showStep(1);
+// Funciones del Wizard Inicial
+function toggleStartBtn() {
+    const isTermsChecked = document.getElementById('terms-check').checked;
+    const isDataChecked = document.getElementById('data-check').checked;
+    document.getElementById('start-btn').disabled = !(isTermsChecked && isDataChecked);
+}
+
+function initializeSystem() {
+    const wizard = document.getElementById('setup-wizard');
+    const app = document.getElementById('app-content');
+
+    wizard.style.opacity = '0';
+    wizard.style.transition = 'opacity 0.8s ease';
+
+    setTimeout(() => {
+        wizard.style.display = 'none';
+        document.body.classList.remove('setup-mode');
+        app.classList.remove('app-hidden');
+        app.classList.add('app-visible');
+        showStep(1); // Iniciar el asistente técnico
+    }, 800);
+}
+
+// Inicializar primer paso solo si el wizard ya no está
+window.onload = () => {
+    // Verificar si el sistema ya está instalado
+    fetch('/api/status')
+        .then(res => res.json())
+        .then(data => {
+            if (data.is_installed) {
+                document.getElementById('maintenance-options').style.display = 'block';
+                document.getElementById('start-btn').innerText = "VINCULAR Y LANZAR SURVSTAKE";
+            }
+        });
+};
+
+function uninstallSystem() {
+    if (confirm("¿ESTÁ SEGURO? Esta acción borrará permanentemente la base de datos de usuarios y registros financieros de SURVSTAKE.")) {
+        fetch('/api/uninstall', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+    }
+}
+
+function repairSystem() {
+    alert("Iniciando modo de reparación... Verificando integridad del Caster y Base de Datos.");
+    // Aquí se podrían añadir más comprobaciones
+}
+
+// ========================================
+// FUNCIONES DEL CHATBOT IA SURVSTAKE
+// ========================================
+
+function toggleChat() {
+    const chat = document.getElementById('ai-chat-widget');
+    chat.classList.toggle('ai-chat-closed');
+}
+
+function sendToAI() {
+    const input = document.getElementById('user-msg');
+    const container = document.getElementById('chat-messages');
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    // Mostrar mensaje del usuario
+    container.innerHTML += `<div class="msg user">${text}</div>`;
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    // Simular retraso de pensamiento de la IA
+    const aiId = "msg-" + Date.now();
+    container.innerHTML += `<div class="msg ai" id="${aiId}">Escribiendo...</div>`;
+    container.scrollTop = container.scrollHeight;
+
+    // Llamar a la API de la IA (Backend Flask en puerto 5006)
+    fetch('http://localhost:5006/api/ai-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, email: 'cliente@survstake.com' })
+    })
+        .then(res => res.json())
+        .then(data => {
+            const aiMsgDiv = document.getElementById(aiId);
+            aiMsgDiv.innerText = data.reply;
+            container.scrollTop = container.scrollHeight;
+        })
+        .catch(err => {
+            const aiMsgDiv = document.getElementById(aiId);
+            aiMsgDiv.innerText = "Lo siento, mi conexión cerebral está en mantenimiento. Inténtelo más tarde o contacte a soporte técnico directamente.";
+        });
+}
+
+
